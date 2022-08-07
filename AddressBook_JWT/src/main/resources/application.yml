@@ -1,0 +1,22 @@
+
+
+environment: COMMON
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect : org.hibernate.dialect.MySQL8Dialect
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${db_url}
+    username: ${db_user}
+    password: ${db_password}
+
+
+server:
+  port: 9090
