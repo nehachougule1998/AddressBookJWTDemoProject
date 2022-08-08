@@ -31,22 +31,8 @@ public class AddressBookService implements IAddressBookService {
     IUserNameRespository serviceOfOtp;
 
     @Autowired
-    IUserNameRespository otpService;
-    @Autowired
     IUserNameRespository iUserNameService;
 
-
-    @Override
-    public AddressBookData addUser(AddressBookDTO addressBookDTO) {
-        AddressBookData user = modelMapper.map(addressBookDTO, AddressBookData.class);
-        return iAddressBookRepository.save(user);
-    }
-
-
-    @Override
-    public List<AddressBookData> getUsers() {
-        return null;
-    }
 
     @Override
     public AddressBookData createAddressBookData(AddressBookDTO addressBookDTO) {
@@ -54,9 +40,10 @@ public class AddressBookService implements IAddressBookService {
         int otps = (int) Math.floor(Math.random() * 1000000);
         String otp = String.valueOf(otps);
         UserNameOtpData userNameOtp = new UserNameOtpData(addressBookDTO.username, otp);
-        serviceOfOtp.save(userNameOtp);
+        serviceOfOtp.save(userNameOtp);//otp is saved
+        System.out.println("Mail has sent .....!!!!");
         emailSenderService.sendEmail(user.getEmail(), "OTP for Registration", otp);
-        return iAddressBookRepository.save(user);
+        return iAddressBookRepository.save(user);//save user data
     }
 
     @Override
@@ -93,13 +80,13 @@ public class AddressBookService implements IAddressBookService {
     }
     @Override
     public Boolean verifyOtp(String username, String otp) {
-        UserNameOtpData serverOtp = otpService.findByUsername(username);
+        UserNameOtpData serverOtp = iUserNameService.findByUsername(username);
 
         if (otp == null)
             return false;
         if(!(otp.equals(serverOtp.getOtp())))
             return false;
-        iAddressBookRepository.changeVerified(username);
+        iAddressBookRepository.changeVerified(username); //when otp successfull then verified change to true
         iUserNameService.deleteEntry(username);
         return true;
     }

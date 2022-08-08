@@ -42,16 +42,11 @@ public class Home {
     @PostMapping("/register")
     public ResponseEntity<AddressBookData> addUser(@Valid @RequestBody AddressBookDTO addressBookDTO) {
         addressBookDTO.setPassword(passwordEncoder.encode(addressBookDTO.getPassword()));
-        AddressBookData user = userService.addUser(addressBookDTO);
+        AddressBookData user = userService.createAddressBookData(addressBookDTO);
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping(value = {"/add"})
-    public ResponseEntity<ResponseDTO> addAddressBookData(@Valid @RequestBody AddressBookDTO addressBookDTO) {
-        AddressBookData addressBookData = userService.createAddressBookData(addressBookDTO);
-        ResponseDTO responseDTO = new ResponseDTO("Data got added Successfully!!!", addressBookData);
-        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
-    }
+
     @GetMapping(value = {"/get/{personId}"})
     public ResponseEntity<ResponseDTO> getAddressBookData(@PathVariable long personId) {
         AddressBookData addressBookData = userService.getAddressBookById(personId);
@@ -61,6 +56,7 @@ public class Home {
     @PutMapping(value = {"/edit/{personId}"})
     public ResponseEntity<ResponseDTO> editAddressBookData(@PathVariable long personId,
                                                            @Valid @RequestBody AddressBookDTO addressBookDTO) {
+        addressBookDTO.setPassword(passwordEncoder.encode(addressBookDTO.getPassword()));
         AddressBookData addressBookData = userService.editAddressBookData(personId, addressBookDTO);
         ResponseDTO responseDTO = new ResponseDTO("Data UPDATED Successfully!!!", addressBookData);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);

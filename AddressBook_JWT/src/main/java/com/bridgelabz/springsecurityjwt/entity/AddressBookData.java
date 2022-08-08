@@ -15,7 +15,7 @@ public class AddressBookData {
     public String role;
 
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public boolean enabled;
+    public boolean verified;
     private String username;
     private String password;
 
@@ -28,9 +28,5 @@ public class AddressBookData {
     private String city;
     private String state;
     private int zip;
-
-
-    public AddressBookData() {
-    }
 
 }
