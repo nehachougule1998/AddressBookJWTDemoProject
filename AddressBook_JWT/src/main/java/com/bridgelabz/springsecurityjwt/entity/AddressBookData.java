@@ -14,10 +14,9 @@ public class AddressBookData {
     private long personId;
     public String role;
 
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public boolean enabled;
-
     private String username;
-
     private String password;
 
     @Column(name = "name")
@@ -29,5 +28,9 @@ public class AddressBookData {
     private String city;
     private String state;
     private int zip;
+
+
+    public AddressBookData() {
+    }
 
 }
