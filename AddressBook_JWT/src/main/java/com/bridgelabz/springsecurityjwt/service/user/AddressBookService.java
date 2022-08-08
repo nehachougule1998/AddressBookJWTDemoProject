@@ -2,8 +2,10 @@ package com.bridgelabz.springsecurityjwt.service.user;
 
 import com.bridgelabz.springsecurityjwt.entity.AddressBookDTO;
 import com.bridgelabz.springsecurityjwt.entity.AddressBookData;
+import com.bridgelabz.springsecurityjwt.entity.UserNameOtpData;
 import com.bridgelabz.springsecurityjwt.exception.AddressBookException;
 import com.bridgelabz.springsecurityjwt.repository.IAddressBookRepository;
+import com.bridgelabz.springsecurityjwt.repository.IUserNameRespository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,13 @@ public class AddressBookService implements IAddressBookService {
     @Autowired
     IAddressBookRepository iAddressBookRepository;
 
+    @Autowired
+    EmailSenderService emailSenderService;
+
+    @Autowired
+    IUserNameRespository serviceOfOtp;
+
+
     @Override
     public AddressBookData addUser(AddressBookDTO addressBookDTO) {
         AddressBookData user = modelMapper.map(addressBookDTO, AddressBookData.class);
@@ -37,10 +46,13 @@ public class AddressBookService implements IAddressBookService {
 
     @Override
     public AddressBookData createAddressBookData(AddressBookDTO addressBookDTO) {
-        AddressBookData addressBookData = modelMapper.map(addressBookDTO, AddressBookData.class);
-        log.debug("Emp Data: " +addressBookData.toString());
-        iAddressBookRepository.save(addressBookData);
-        return addressBookData;
+        AddressBookData user = modelMapper.map(addressBookDTO, AddressBookData.class);
+        int otps = (int) Math.floor(Math.random() * 1000000);
+        String otp = String.valueOf(otps);
+        UserNameOtpData userNameOtp = new UserNameOtpData(addressBookDTO.username, otp);
+        serviceOfOtp.save(userNameOtp);
+        emailSenderService.sendEmail(user.getEmail(), "OTP for Registration", otp);
+        return iAddressBookRepository.save(user);
     }
 
     @Override
