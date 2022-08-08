@@ -28,6 +28,7 @@ public class  MySecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationEntryPoint authenticationEntryPoint;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //here we define the url that will be publicly open and private

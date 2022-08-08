@@ -22,4 +22,7 @@ public interface IAddressBookRepository extends JpaRepository<AddressBookData, L
     @Query(value = "update address_book_data set verified=true where username = :username ", nativeQuery = true)
     void changeVerified(String username);
 
+    @Query(value = "select verified from address_book_data where username = :username", nativeQuery = true)
+    Boolean isVerified(String username);
 }
+

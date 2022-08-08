@@ -21,7 +21,6 @@ public class AddressBookService implements IAddressBookService {
     @Autowired
     private ModelMapper modelMapper;
 
-
     @Autowired
     IAddressBookRepository iAddressBookRepository;
 
@@ -70,7 +69,13 @@ public class AddressBookService implements IAddressBookService {
     public AddressBookData editAddressBookData(long personId, AddressBookDTO addressBookDTO) {
         AddressBookData addressBookData = this.getAddressBookById(personId);
         modelMapper.map(addressBookDTO, addressBookData);
-        return iAddressBookRepository.save(addressBookData);
+        int otps = (int) Math.floor(Math.random() * 1000000);
+        String otp = String.valueOf(otps);
+        UserNameOtpData userNameOtp = new UserNameOtpData(addressBookDTO.username, otp);
+        serviceOfOtp.save(userNameOtp);
+        emailSenderService.sendEmail(addressBookData.getEmail(), "OTP for Updating Details.", otp);
+        iAddressBookRepository.save(addressBookData);
+        return addressBookData;
     }
 
     @Override
@@ -97,6 +102,11 @@ public class AddressBookService implements IAddressBookService {
         iAddressBookRepository.changeVerified(username);
         iUserNameService.deleteEntry(username);
         return true;
+    }
+
+    @Override
+    public Boolean isVerified(String username) {
+        return iAddressBookRepository.isVerified(username);
     }
 }
 

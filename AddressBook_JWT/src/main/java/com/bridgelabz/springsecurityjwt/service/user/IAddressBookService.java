@@ -23,5 +23,7 @@ public interface IAddressBookService {
     List<AddressBookData> getContactsByCity();
 
     Boolean verifyOtp(String username, String otp);
+
+    Boolean isVerified(String username);
 }
 
