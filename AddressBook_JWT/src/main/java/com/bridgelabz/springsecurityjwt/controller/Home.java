@@ -2,6 +2,7 @@ package com.bridgelabz.springsecurityjwt.controller;
 
 
 import com.bridgelabz.springsecurityjwt.dto.ResponseDTO;
+import com.bridgelabz.springsecurityjwt.dto.UserNameOtpDTO;
 import com.bridgelabz.springsecurityjwt.entity.AddressBookDTO;
 import com.bridgelabz.springsecurityjwt.entity.AddressBookData;
 import com.bridgelabz.springsecurityjwt.entity.JwtResponse;
@@ -22,6 +23,10 @@ public class Home {
 
     @Autowired
     private IAddressBookService userService;
+
+    final static String SUCCESS = "Entered Otp is valid, and Registration was successful.";
+    final static String FAIL = "Entered OTP was not valid! , Registration failed!, please try again";
+
 
 
     //this api is accessible to authenticated user only
@@ -79,6 +84,16 @@ public class Home {
         ResponseDTO responseDTO = new ResponseDTO("Success call for State!!!", addressBookDataList);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
+    @PostMapping({"/verifyotp"})
+    public String verifyOtp(@Valid @RequestBody UserNameOtpDTO userNameOtpDTO) {
+        String username = userNameOtpDTO.getUsername();
+        String otp = userNameOtpDTO.getOtp();
+        Boolean isVerifyOtp = userService.verifyOtp(username, otp);
+        if (!isVerifyOtp)
+            return FAIL;
+        return SUCCESS;
+    }
+
 
 
 }

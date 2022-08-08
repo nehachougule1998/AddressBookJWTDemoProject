@@ -21,4 +21,7 @@ public interface IAddressBookService {
     List<AddressBookData> getContactsByState();
 
     List<AddressBookData> getContactsByCity();
+
+    Boolean verifyOtp(String username, String otp);
 }
+
